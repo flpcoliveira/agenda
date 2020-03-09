@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Agenda.Api.Data.Interfaces
+namespace Agenda.Api.Infrastructure.Interfaces
 {
-    interface IRepository <T, U> where U : DbContext
+    interface IRepository <T>
     {
-        protected U Context { get; }
 
         public IEnumerable<T> GetAll();
 

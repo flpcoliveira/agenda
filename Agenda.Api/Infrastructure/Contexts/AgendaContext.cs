@@ -1,11 +1,12 @@
-﻿using Agenda.Api.Models;
+﻿using Agenda.Api.Infrastructure.Entities;
+using Agenda.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Agenda.Api.Infrastructure
+namespace Agenda.Api.Infrastructure.Contexts
 {
     public class AgendaContext: DbContext
     {

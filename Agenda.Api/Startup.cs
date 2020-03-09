@@ -1,4 +1,4 @@
-using Agenda.Api.Infrastructure;
+using Agenda.Api.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

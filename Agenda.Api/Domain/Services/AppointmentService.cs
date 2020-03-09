@@ -9,7 +9,7 @@ namespace Agenda.Api.Domain.Services
 {
     public class AppointmentService : IAppointmentService
     {
-        public Appointment Create(Appointment model)
+        public AppointmentDto Create(AppointmentDto model)
         {
             throw new NotImplementedException();
         }
@@ -19,17 +19,17 @@ namespace Agenda.Api.Domain.Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Appointment> GetAll()
+        public IEnumerable<AppointmentDto> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Appointment GetById(int id)
+        public AppointmentDto GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Appointment Update(Appointment model)
+        public AppointmentDto Update(AppointmentDto model)
         {
             throw new NotImplementedException();
         }

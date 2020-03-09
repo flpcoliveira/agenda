@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Agenda.Api.Models
+namespace Agenda.Api.Infrastructure.Entities
 {
     public class Appointment
     {
