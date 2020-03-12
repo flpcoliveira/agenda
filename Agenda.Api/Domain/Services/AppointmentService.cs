@@ -4,19 +4,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
+using AutoMapper;
+using Agenda.Api.Infrastructure.Entities;
+using Agenda.Api.Infrastructure.Interfaces;
 
 namespace Agenda.Api.Domain.Services
 {
     public class AppointmentService : IAppointmentService
     {
-        public AppointmentDto Create(AppointmentDto model)
+        private IMapper _mapper;
+        private IAppointmentRepository _repository;
+        
+        public AppointmentService(IMapper mapper, IAppointmentRepository repository) 
         {
-            throw new NotImplementedException();
+            _mapper = mapper;
+            _repository = repository;
+        }
+        public AppointmentDto Create(AppointmentDto data)
+        {
+            var entity = _mapper.Map<AppointmentDto, Appointment>(data);
+            entity = _repository.Create(entity);
+            return _mapper.Map<Appointment, AppointmentDto>(entity);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _repository.Delete(id);
         }
 
         public IEnumerable<AppointmentDto> GetAll()
@@ -26,12 +40,15 @@ namespace Agenda.Api.Domain.Services
 
         public AppointmentDto GetById(int id)
         {
-            throw new NotImplementedException();
+            var entity = _repository.GetById(id);
+            return _mapper.Map<Appointment, AppointmentDto>(entity);
         }
 
-        public AppointmentDto Update(AppointmentDto model)
+        public AppointmentDto Update(AppointmentDto data)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<AppointmentDto, Appointment>(data);
+            entity = _repository.Update(entity);
+            return _mapper.Map<Appointment, AppointmentDto>(entity);
         }
     }
 }
