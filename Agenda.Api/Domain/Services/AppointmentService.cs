@@ -15,8 +15,8 @@ namespace Agenda.Api.Domain.Services
     {
         private IMapper _mapper;
         private IAppointmentRepository _repository;
-        
-        public AppointmentService(IMapper mapper, IAppointmentRepository repository) 
+
+        public AppointmentService(IMapper mapper, IAppointmentRepository repository)
         {
             _mapper = mapper;
             _repository = repository;
@@ -35,7 +35,15 @@ namespace Agenda.Api.Domain.Services
 
         public IEnumerable<AppointmentDto> GetAll()
         {
-            throw new NotImplementedException();
+            var entities = _repository.GetAll();
+            List<AppointmentDto> items = new List<AppointmentDto>();
+            foreach (var entity in entities)
+            {
+                var item = _mapper.Map<Appointment, AppointmentDto>(entity);
+                items.Add(item);
+            }
+
+            return items;
         }
 
         public AppointmentDto GetById(int id)
