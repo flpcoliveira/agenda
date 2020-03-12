@@ -1,4 +1,5 @@
 using Agenda.Api.Infrastructure.Contexts;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ namespace Agenda.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.AddDbContext<AgendaContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("SqliteConnection")));
