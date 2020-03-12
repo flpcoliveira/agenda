@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Agenda.Api.Infrastructure.Interfaces
 {
-    interface IRepository <T>
+    public interface IRepository <T>
     {
 
         public IEnumerable<T> GetAll();

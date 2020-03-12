@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Agenda.Api.Infrastructure.Interfaces
 {
-    interface IAppointmentRepository : IRepository<Appointment>
+    public interface IAppointmentRepository : IRepository<Appointment>
     {
     }
 }
