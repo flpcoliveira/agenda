@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Agenda.Api.Domain.Interfaces
 {
-    interface IService <T>
+    public interface IService <T>
     {
         public IEnumerable<T> GetAll();
 
