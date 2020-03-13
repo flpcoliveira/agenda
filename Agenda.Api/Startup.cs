@@ -33,7 +33,7 @@ namespace Agenda.Api
             services.AddAutoMapper(typeof(Startup));
 
             services.AddDbContext<AgendaContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("SqliteConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("MsSqlConnection")));
 
             RegisterDependencies(services);
         }
