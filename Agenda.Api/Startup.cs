@@ -3,6 +3,7 @@ using Agenda.Api.Domain.Services;
 using Agenda.Api.Infrastructure.Contexts;
 using Agenda.Api.Infrastructure.Interfaces;
 using Agenda.Api.Infrastructure.Repositories;
+using Agenda.Api.Middleware;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -40,11 +41,7 @@ namespace Agenda.Api
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+        {            
 
             app.UseHttpsRedirection();
 
@@ -56,7 +53,7 @@ namespace Agenda.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers();                
             });
         }
 
@@ -64,6 +61,8 @@ namespace Agenda.Api
         {
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<IPatientRepository, PatientRepository>();
         }
     }
 }
