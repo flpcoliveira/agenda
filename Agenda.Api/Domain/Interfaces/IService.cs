@@ -13,7 +13,7 @@ namespace Agenda.Api.Domain.Interfaces
 
         public T Create(T model);
 
-        public T Update(T model);
+        public T Update(int id, T model);
 
         public void Delete(int id);
     }

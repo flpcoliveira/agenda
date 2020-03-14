@@ -7,40 +7,44 @@ using System.Threading.Tasks;
 using System.Linq;
 using Agenda.Api.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Agenda.Api.Infrastructure.Repositories
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class AppointmentRepository : AbstractRepository<AgendaContext, Appointment>, IAppointmentRepository
     {
-        private readonly AgendaContext _context;
+        public AppointmentRepository(AgendaContext context) : base(context) { }
 
-        public AppointmentRepository(AgendaContext context)
+        public override Appointment Create(Appointment entity)
         {
-            _context = context;
+            return Context.Appointments.Add(entity).Entity;
         }
 
-        public Appointment Create(Appointment entity)
-        {
-            return _context.Appointments.Add(entity).Entity;
-        }
-
-        public void Delete(int id)
+        public override void Delete(int id)
         {
             var entity = this.GetById(id);
-            _context.Remove(entity);
+            Context.Remove(entity);
         }
 
-        public IEnumerable<Appointment> GetAll()
+        public override IEnumerable<Appointment> GetAll()
         {
-            return _context
+            return Context
                 .Appointments
                 .Include(appointment => appointment.Patient)
+                .AsNoTracking()
                 .ToList();
         }
 
-        public Appointment GetById(int id)
+        public bool ExistsAppointmentBetween(DateTime initialDate, DateTime endDate)
         {
-            var appointment = _context
+            return Context.Appointments.Any(OverflowedAppointments(initialDate, endDate));
+        }
+
+        public override Appointment GetById(int id)
+        {
+            var appointment = Context
                 .Appointments
                 .Include(appointment => appointment.Patient)
                 .Where(a => a.Id == id)
@@ -51,9 +55,15 @@ namespace Agenda.Api.Infrastructure.Repositories
             return appointment;
         }
 
-        public Appointment Update(Appointment entity)
+        public override Appointment Update(Appointment entity)
         {
-            return _context.Appointments.Update(entity).Entity;
+            return Context.Appointments.Update(entity).Entity;
+        }
+
+        private Expression<Func<Appointment, bool>> OverflowedAppointments(DateTime initialDate, DateTime endDate)
+        {
+            return appointment => (initialDate >= appointment.StartedAt && initialDate <= appointment.FinishedAt) ||
+            (endDate >= appointment.StartedAt && endDate <= appointment.FinishedAt);
         }
     }
 }
