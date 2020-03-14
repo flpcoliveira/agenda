@@ -8,6 +8,7 @@ using FluentValidation;
 using AutoMapper;
 using Agenda.Api.Infrastructure.Entities;
 using Agenda.Api.Infrastructure.Interfaces;
+using Agenda.Api.Exceptions;
 
 namespace Agenda.Api.Domain.Services
 {
@@ -25,12 +26,14 @@ namespace Agenda.Api.Domain.Services
         {
             var entity = _mapper.Map<AppointmentDto, Appointment>(data);
             entity = _repository.Create(entity);
+            _repository.SaveChanges();
             return _mapper.Map<Appointment, AppointmentDto>(entity);
         }
 
         public void Delete(int id)
         {
             _repository.Delete(id);
+            _repository.SaveChanges();
         }
 
         public IEnumerable<AppointmentDto> GetAll()
@@ -52,10 +55,14 @@ namespace Agenda.Api.Domain.Services
             return _mapper.Map<Appointment, AppointmentDto>(entity);
         }
 
-        public AppointmentDto Update(AppointmentDto data)
+        public AppointmentDto Update(int id, AppointmentDto data)
         {
             var entity = _mapper.Map<AppointmentDto, Appointment>(data);
+            entity.Id = id;
+            if (_repository.ExistsAppointmentBetween(entity.StartedAt, entity.FinishedAt))
+                throw new DomainException("Exists another appointment at the selected interval");
             entity = _repository.Update(entity);
+            _repository.SaveChanges();
             return _mapper.Map<Appointment, AppointmentDto>(entity);
         }
     }

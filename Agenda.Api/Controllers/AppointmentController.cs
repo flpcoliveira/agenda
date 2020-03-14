@@ -31,7 +31,7 @@ namespace Agenda.Controllers
             return _service.GetById(id);
         }
 
-        [Route("{id}")]
+        [Route("")]
         [HttpPost]
         public AppointmentDto Create([FromBody]AppointmentDto data)
         {
@@ -42,7 +42,14 @@ namespace Agenda.Controllers
         [HttpPut]
         public AppointmentDto Update(int id, [FromBody]AppointmentDto data)
         {
-            return _service.Update(data);
+            return _service.Update(id, data);
+        }
+
+        [Route("{id}")]
+        [HttpDelete]
+        public void Delete(int id)
+        {
+            _service.Delete(id);
         }
     }
 }
