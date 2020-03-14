@@ -12,10 +12,10 @@ namespace Agenda.Controllers
 
         private IAppointmentService _service;
 
-        public AppointmentController(IAppointmentService service) 
+        public AppointmentController(IAppointmentService service)
         {
             _service = service;
-        } 
+        }
 
 
         [Route("")]
@@ -25,8 +25,8 @@ namespace Agenda.Controllers
             return _service.GetAll();
         }
 
-                [HttpGet("{id}")]
-        public AppointmentDto GetById([FromQuery]int id)
+        [HttpGet("{id}")]
+        public AppointmentDto GetById(int id)
         {
             return _service.GetById(id);
         }
