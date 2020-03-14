@@ -19,5 +19,7 @@ namespace Agenda.Api.Models
 
         public string PatientBirthDate { get; set; }
 
+        public string Comments { get; set; }
+
     }
 }
