@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Agenda.Api.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Agenda.Api.Infrastructure.Repositories
 {
@@ -31,13 +32,22 @@ namespace Agenda.Api.Infrastructure.Repositories
 
         public IEnumerable<Appointment> GetAll()
         {
-            return _context.Appointments.ToList();
+            return _context
+                .Appointments
+                .Include(appointment => appointment.Patient)
+                .ToList();
         }
 
         public Appointment GetById(int id)
         {
-            var appointment = _context.Appointments.Find(id);
-            if (appointment == null) throw new EntitynotfoundException("Appointment not found");
+            var appointment = _context
+                .Appointments
+                .Include(appointment => appointment.Patient)
+                .Where(a => a.Id == id)
+                .FirstOrDefault();
+
+            if (appointment == null) throw new EntitynotfoundException($"Appointment {id} not found");
+
             return appointment;
         }
 
