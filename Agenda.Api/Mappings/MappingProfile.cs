@@ -9,17 +9,22 @@ namespace Agenda.Api.Mappings
         public MappingProfile()
         {
             CreateAppointmentsMap();
+            CreatePatientsMap();
         }
 
         private void CreateAppointmentsMap()
         {
-            CreateMap<Appointment, AppointmentDto>()            
-            .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => src.Patient.Id))
+            CreateMap<Appointment, AppointmentDto>()
             .ReverseMap()
-            .ForPath(dest => dest.Patient.Id, opt => opt.MapFrom(src => src.PatientId))
-            .ForPath(dest => dest.Patient.Name, opt => opt.MapFrom(src => src.PatientName))
-            .ForPath(dest => dest.Patient.BirthDate, opt => opt.MapFrom(src => src.PatientBirthDate));
+            .ForMember(dest => dest.Patient, src => src.Ignore())
+            .ForMember(dest => dest.Id, src=> src.Ignore());
         }
 
+        private void CreatePatientsMap()
+        {
+            CreateMap<Patient, PatientDto>()
+            .ReverseMap()
+            .ForMember(dest => dest.Id, src => src.Ignore());
+        }
     }
 }
