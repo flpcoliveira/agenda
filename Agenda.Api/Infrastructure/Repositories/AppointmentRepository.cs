@@ -4,41 +4,66 @@ using Agenda.Api.Infrastructure.Interfaces;
 using Agenda.Api.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using Agenda.Api.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Agenda.Api.Infrastructure.Repositories
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class AppointmentRepository : AbstractRepository<AgendaContext, Appointment>, IAppointmentRepository
     {
-        private AgendaContext Context { get; set; }
+        public AppointmentRepository(AgendaContext context) : base(context) { }
 
-        public AppointmentRepository(AgendaContext context)
+        public override Appointment Create(Appointment entity)
         {
-            Context = context;
+            return Context.Appointments.Add(entity).Entity;
         }
 
-        public Appointment Create(Appointment model)
+        public override void Delete(int id)
         {
-            throw new System.NotImplementedException();
+            var entity = this.GetById(id);
+            Context.Remove(entity);
         }
 
-        public void Delete(int id)
+        public override IEnumerable<Appointment> GetAll()
         {
-            throw new System.NotImplementedException();
+            return Context
+                .Appointments
+                .Include(appointment => appointment.Patient)
+                .AsNoTracking()
+                .ToList();
         }
 
-        public IEnumerable<Appointment> GetAll()
+        public IEnumerable<Appointment> AppointmentsBetween(DateTime initialDate, DateTime endDate)
         {
-            throw new System.NotImplementedException();
+            return Context.Appointments.Where(OverflowedAppointments(initialDate, endDate));
         }
 
-        public Appointment GetById(int id)
+        public override Appointment GetById(int id)
         {
-            throw new System.NotImplementedException();
+            var appointment = Context
+                .Appointments
+                .Include(appointment => appointment.Patient)
+                .Where(a => a.Id == id)
+                .FirstOrDefault();
+
+            if (appointment == null) throw new EntitynotfoundException($"Appointment {id} not found");
+
+            return appointment;
         }
 
-        public Appointment Update(Appointment model)
+        public override Appointment Update(Appointment entity)
         {
-            throw new System.NotImplementedException();
+            return Context.Appointments.Update(entity).Entity;
+        }
+
+        private Expression<Func<Appointment, bool>> OverflowedAppointments(DateTime initialDate, DateTime endDate)
+        {
+            return appointment => (initialDate >= appointment.StartedAt && initialDate <= appointment.FinishedAt) ||
+            (endDate >= appointment.StartedAt && endDate <= appointment.FinishedAt);
         }
     }
 }

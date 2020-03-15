@@ -2,7 +2,7 @@
 
 namespace Agenda.Api.Domain.Interfaces
 {
-    interface IAppointmentService: IService<AppointmentDto>
+    public interface IAppointmentService: IService<AppointmentDto>
     {
         
     }

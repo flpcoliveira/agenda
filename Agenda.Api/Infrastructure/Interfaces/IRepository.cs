@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Agenda.Api.Infrastructure.Interfaces
 {
-    interface IRepository <T>
+    public interface IRepository <T>
     {
+        public void SaveChanges();
+
+        public Task SaveChangesAsync();
 
         public IEnumerable<T> GetAll();
 

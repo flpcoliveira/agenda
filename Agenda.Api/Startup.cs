@@ -1,4 +1,11 @@
+using Agenda.Api.Domain.Interfaces;
+using Agenda.Api.Domain.Services;
 using Agenda.Api.Infrastructure.Contexts;
+using Agenda.Api.Infrastructure.Interfaces;
+using Agenda.Api.Infrastructure.Repositories;
+using Agenda.Api.Middleware;
+using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -20,19 +27,21 @@ namespace Agenda.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            services.AddCors();
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddDbContext<AgendaContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("SqliteConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("MsSqlConnection")));
+
+            RegisterDependencies(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+        {            
 
             app.UseHttpsRedirection();
 
@@ -40,10 +49,20 @@ namespace Agenda.Api
 
             app.UseAuthorization();
 
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers();                
             });
+        }
+
+        private void RegisterDependencies(IServiceCollection services)
+        {
+            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<IPatientRepository, PatientRepository>();
         }
     }
 }

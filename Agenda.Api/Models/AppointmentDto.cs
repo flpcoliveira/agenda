@@ -13,11 +13,13 @@ namespace Agenda.Api.Models
 
         public DateTime FinishedAt { get; set; }
 
-        public int? PatientId { get; set; }
+        public int PatientId { get; set; }
 
         public string PatientName { get; set; }
 
         public string PatientBirthDate { get; set; }
+
+        public string Comments { get; set; }
 
     }
 }
