@@ -55,8 +55,8 @@ namespace Agenda.Api.Domain.Services
 
         public PatientDto Update(int id, PatientDto data)
         {
-            var entity = _mapper.Map<PatientDto, Patient>(data);
-            entity.Id = id;
+            var entity = _repository.GetById(id);
+            _mapper.Map<PatientDto, Patient>(data, entity);
             entity = _repository.Update(entity);
             return _mapper.Map<Patient, PatientDto>(entity);
         }

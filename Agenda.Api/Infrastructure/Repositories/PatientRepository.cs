@@ -46,7 +46,7 @@ namespace Agenda.Api.Infrastructure.Repositories
         }
 
         public override Patient Update(Patient entity)
-        {
+        {            
             return Context.Patients.Update(entity).Entity;
         }
     }
