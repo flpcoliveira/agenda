@@ -25,8 +25,12 @@ namespace Agenda.Api.Domain.Services
         public AppointmentDto Create(AppointmentDto data)
         {
             var entity = _mapper.Map<AppointmentDto, Appointment>(data);
+
+            ValidateAppointmentInterval(entity.StartedAt, entity.FinishedAt);
+
             entity = _repository.Create(entity);
             _repository.SaveChanges();
+
             return _mapper.Map<Appointment, AppointmentDto>(entity);
         }
 
@@ -58,12 +62,29 @@ namespace Agenda.Api.Domain.Services
         public AppointmentDto Update(int id, AppointmentDto data)
         {
             var entity = this._repository.GetById(id);
-            _mapper.Map<AppointmentDto, Appointment>(data, entity);            
-            if (_repository.ExistsAppointmentBetween(entity.StartedAt, entity.FinishedAt))
-                throw new DomainException("Exists another appointment at selected interval");
-            entity = _repository.Update(entity);
+            _mapper.Map<AppointmentDto, Appointment>(data, entity);
+
+            ValidateAppointmentInterval(entity.StartedAt, entity.FinishedAt, id);
+
+             entity = _repository.Update(entity);
             _repository.SaveChanges();
+
             return _mapper.Map<Appointment, AppointmentDto>(entity);
         }
-    }
+
+        private void ValidateAppointmentInterval(DateTime initialDate, DateTime finalDate, int? id = null)
+        {
+            if(initialDate >= finalDate)
+                throw new DomainException("Appointment start must be before finish");
+
+            var appointments = _repository
+                    .AppointmentsBetween(initialDate, finalDate);
+
+            if (id.HasValue)            
+                appointments = appointments.Where(a => a.Id != id);            
+
+            if (appointments.Count() > 0)
+                throw new DomainException("Exists another appointment at selected interval");
+        }
+    }   
 }

@@ -9,6 +9,6 @@ namespace Agenda.Api.Infrastructure.Interfaces
 {
     public interface IAppointmentRepository : IRepository<Appointment>
     {
-        public bool ExistsAppointmentBetween(DateTime initialDate, DateTime endDate);
+        public IEnumerable<Appointment> AppointmentsBetween(DateTime initialDate, DateTime endDate);
     }
 }

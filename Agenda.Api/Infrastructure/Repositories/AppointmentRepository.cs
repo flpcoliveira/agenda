@@ -37,9 +37,9 @@ namespace Agenda.Api.Infrastructure.Repositories
                 .ToList();
         }
 
-        public bool ExistsAppointmentBetween(DateTime initialDate, DateTime endDate)
+        public IEnumerable<Appointment> AppointmentsBetween(DateTime initialDate, DateTime endDate)
         {
-            return Context.Appointments.Any(OverflowedAppointments(initialDate, endDate));
+            return Context.Appointments.Where(OverflowedAppointments(initialDate, endDate));
         }
 
         public override Appointment GetById(int id)
