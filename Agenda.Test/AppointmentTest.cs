@@ -105,5 +105,28 @@ namespace Agenda.Test
             var ex =  Assert.Throws<DomainException>(() =>_service.Create(appointment));
             Assert.Equal("Exists another appointment at selected interval", ex.Message);
         }
+
+        [Fact]
+        public void CreateWithStartDateGreaterThanFinishDate()
+        {
+            var patient = new PatientDto
+            {
+                Name = "Joabe Lucas de Oliveira Filho",
+                BirthDate = new DateTime(1986, 9, 27)
+            };
+            patient = _patientService.Create(patient);
+
+            var appointment = new AppointmentDto
+            {
+                PatientId = patient.Id,
+                StartedAt = new DateTime(2020, 04, 01, 15, 30, 0),
+                FinishedAt = new DateTime(2020, 04, 01, 15, 0, 0),
+                Comments = "Comment test"
+            };
+
+            var ex = Assert.Throws<DomainException>(() => _service.Create(appointment));
+            Assert.Equal("Appointment start must be before finish", ex.Message);
+
+        }
     }
 }
