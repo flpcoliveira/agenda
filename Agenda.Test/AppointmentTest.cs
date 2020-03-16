@@ -2,6 +2,7 @@ using System;
 using Agenda.Api;
 using Agenda.Api.Domain.Interfaces;
 using Agenda.Api.Domain.Services;
+using Agenda.Api.Exceptions;
 using Agenda.Api.Infrastructure.Contexts;
 using Agenda.Api.Infrastructure.Interfaces;
 using Agenda.Api.Infrastructure.Repositories;
@@ -27,14 +28,13 @@ namespace Agenda.Test
 
             services.AddAutoMapper(typeof(Startup));
 
-            var serviceProvider = services.BuildServiceProvider();
-
-            //services.AddDbContext<AgendaContext>(opt => opt.UseInMemoryDatabase(databaseName: "InMemoryDb"), ServiceLifetime.Scoped, ServiceLifetime.Scoped);
+            var serviceProvider = services.BuildServiceProvider();            
 
             services.AddDbContext<AgendaContext>(options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=AgendaTest;Trusted_Connection=True;MultipleActiveResultSets=true"));
-
-
+            
             var context = services.BuildServiceProvider().GetService<AgendaContext>();
+            context.Database.EnsureDeleted();
+            context.Database.Migrate();
 
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
@@ -72,6 +72,38 @@ namespace Agenda.Test
             Assert.Equal(appointment.StartedAt, appointmentCreated.StartedAt);
             Assert.Equal(appointment.FinishedAt, appointmentCreated.FinishedAt);
             Assert.Equal(appointment.Comments, appointmentCreated.Comments);
+        }
+
+        [Fact]
+        public void CreateAppointmentWithDateTimeConflict()
+        {
+            var patient = new PatientDto
+            {
+                Name = "Angela Maria Martins Cristo",
+                BirthDate = new DateTime(1962, 7, 23)
+            };
+            patient = _patientService.Create(patient);
+
+            var appointment = new AppointmentDto
+            {
+                PatientId = patient.Id,
+                StartedAt = new DateTime(2020, 04, 01, 15, 30, 0),
+                FinishedAt = new DateTime(2020, 04, 01, 16, 0, 0),
+                Comments = "Comment test"
+            };
+
+            var appointmentCreated = _service.Create(appointment);
+
+            var appointmentWithDateConflict = new AppointmentDto
+            {
+                PatientId = patient.Id,
+                StartedAt = new DateTime(2020, 04, 01, 15, 15, 0),
+                FinishedAt = new DateTime(2020, 04, 01, 15, 45, 0),
+                Comments = "Comment test"
+            };
+
+            var ex =  Assert.Throws<DomainException>(() =>_service.Create(appointment));
+            Assert.Equal("Exists another appointment at selected interval", ex.Message);
         }
     }
 }
