@@ -7,7 +7,7 @@ namespace Agenda.Api.Domain.Interfaces
 {
     public interface IService <T>
     {
-        public IEnumerable<T> GetAll();
+        public Task<List<T>> GetAll();
 
         public T GetById(int id);
 

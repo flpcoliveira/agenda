@@ -40,9 +40,9 @@ namespace Agenda.Api.Domain.Services
             _repository.SaveChanges();
         }
 
-        public IEnumerable<AppointmentDto> GetAll()
+        public async Task<List<AppointmentDto>> GetAll()
         {
-            var entities = _repository.GetAll();
+            var entities = await _repository.GetAll();
             List<AppointmentDto> items = new List<AppointmentDto>();
             foreach (var entity in entities)
             {

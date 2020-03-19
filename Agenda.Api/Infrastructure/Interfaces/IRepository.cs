@@ -9,7 +9,7 @@ namespace Agenda.Api.Infrastructure.Interfaces
 
         public Task SaveChangesAsync();
 
-        public IEnumerable<T> GetAll();
+        public Task<List<T>> GetAll();
 
         public T GetById(int id);
 

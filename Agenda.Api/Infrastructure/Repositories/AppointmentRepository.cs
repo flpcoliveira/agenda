@@ -28,13 +28,13 @@ namespace Agenda.Api.Infrastructure.Repositories
             Context.Remove(entity);
         }
 
-        public override IEnumerable<Appointment> GetAll()
+        public override async Task<List<Appointment>> GetAll()
         {
-            return Context
+            return await Context
                 .Appointments
                 .Include(appointment => appointment.Patient)
                 .AsNoTracking()
-                .ToList();
+                .ToListAsync();        
         }
 
         public IEnumerable<Appointment> AppointmentsBetween(DateTime initialDate, DateTime endDate)

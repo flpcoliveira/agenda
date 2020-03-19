@@ -25,12 +25,12 @@ namespace Agenda.Api.Infrastructure.Repositories
             Context.Patients.Remove(entity);
         }
 
-        public override IEnumerable<Patient> GetAll()
+        public override async Task<List<Patient>> GetAll()
         {
-            return Context
+            return await Context
                 .Patients
                 .AsNoTracking()
-                .ToList();
+                .ToListAsync();
         }
 
         public override Patient GetById(int id)

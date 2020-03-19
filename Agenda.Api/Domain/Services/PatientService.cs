@@ -34,9 +34,9 @@ namespace Agenda.Api.Domain.Services
             _repository.Delete(id);
         }
 
-        public IEnumerable<PatientDto> GetAll()
+        public async Task<List<PatientDto>> GetAll()
         {
-            var entities = _repository.GetAll();
+            var entities = await _repository.GetAll();
             List<PatientDto> items = new List<PatientDto>();
             foreach (var entity in entities)
             {

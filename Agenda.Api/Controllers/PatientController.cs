@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Agenda.Api.Domain.Interfaces;
 using Agenda.Api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,9 @@ namespace Agenda.Controllers
 
         [Route("")]
         [HttpGet]
-        public IEnumerable<PatientDto> GetAll()
+        public async Task<List<PatientDto>> GetAll()
         {
-            return _service.GetAll();
+            return await _service.GetAll();
         }
 
         [HttpGet("{id}")]

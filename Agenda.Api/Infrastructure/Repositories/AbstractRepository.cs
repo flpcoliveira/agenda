@@ -26,7 +26,7 @@ namespace Agenda.Api.Infrastructure.Repositories
             await Context.SaveChangesAsync();
         }
 
-        public abstract IEnumerable<U> GetAll();
+        public abstract Task<List<U>> GetAll();
         public abstract U GetById(int id);
         public abstract U Create(U model);
         public abstract U Update(U model);
