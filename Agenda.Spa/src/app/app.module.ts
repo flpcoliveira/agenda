@@ -3,16 +3,21 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AppointmentService } from './services/appointment.service';
+import { HttpClientModule } from '@angular/common/http';
+import { AppointmentListComponent } from './appointments/list/appointment-list.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AppointmentListComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [AppointmentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

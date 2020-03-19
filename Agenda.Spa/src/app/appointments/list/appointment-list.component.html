@@ -1,0 +1,19 @@
+<table class="table table-striped mt-5">
+    <thead class="thead-dark bg-dark text-white">
+        <tr>
+            <th>Patient Name</th>
+            <th>Patient Birthdate</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let appointment of appointments">
+            <td>{{ appointment.patientName }}</td>
+            <td>{{ appointment.patientBirthDate }}</td>
+            <td>{{ appointment.startedAt }}</td>
+            <td>{{ appointment.finishedAt }}</td>
+        </tr>
+    </tbody>
+</table>
