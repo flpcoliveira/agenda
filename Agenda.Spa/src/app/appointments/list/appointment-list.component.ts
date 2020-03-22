@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppointmentService } from 'src/app/services/appointment.service';
 import { Appointment } from 'src/app/models/appointment';
-
-const dateTimeFormat = 'dd/mm/yyyy HH:mm';
-const dateFormat = 'dd/mm/yyyy';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-root',
@@ -13,16 +11,21 @@ const dateFormat = 'dd/mm/yyyy';
 export class AppointmentListComponent implements OnInit {
     
     appointments: Appointment[] = [];
+    loading: boolean = true;
 
     constructor(private appointmentService : AppointmentService) { }
 
-    ngOnInit() : void {
+    ngOnInit() : void {        
         this.appointmentService
         .gellAll().
         subscribe((response: Appointment[]) => {    
             response.forEach((item) => {
+                item.patientBirthDate = moment(item.patientBirthDate, "DD/MM/YYYY HH:mm::ss").format("DD/MM/YYYY");
+                item.startedAt = moment(item.startedAt, moment.HTML5_FMT.DATETIME_LOCAL_SECONDS).format("DD/MM/YYYY HH:mm");
+                item.finishedAt = moment(item.finishedAt, moment.HTML5_FMT.DATETIME_LOCAL_SECONDS).format("DD/MM/YYYY HH:mm"); 
                 this.appointments.push(item);
-            });            
+            });
+            this.loading =  false;
             console.log(this.appointments);
         });
     }
