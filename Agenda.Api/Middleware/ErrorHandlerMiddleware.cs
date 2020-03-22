@@ -27,6 +27,7 @@ namespace Agenda.Api.Middleware
             try
             {
                 await _next(context);
+                _logger.LogInformation($"{context.Request.Method} {context.Request.Path.ToString()}");
             }
             catch (Exception e)
             {
