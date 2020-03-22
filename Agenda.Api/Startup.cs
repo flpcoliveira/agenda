@@ -43,6 +43,8 @@ namespace Agenda.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {            
 
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
