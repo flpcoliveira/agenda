@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Agenda.Api.Middleware
 {
-    public class ErrorHandlerMiddleware
+    public class AppHandlerMiddleware
     {
         private readonly RequestDelegate _next;
 
-        private readonly ILogger<ErrorHandlerMiddleware> _logger;
+        private readonly ILogger<AppHandlerMiddleware> _logger;
 
-        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
+        public AppHandlerMiddleware(RequestDelegate next, ILogger<AppHandlerMiddleware> logger)
         {
             _next = next;
             _logger = logger;
